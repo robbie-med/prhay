@@ -13,13 +13,51 @@ window.Prhay = window.Prhay || {};
         const [newText, setNewText] = useState('');
         const [newCat, setNewCat] = useState('Personal');
         const [newFreq, setNewFreq] = useState('daily');
+        const [newWeekDays, setNewWeekDays] = useState([]);
+        const [newMonthDays, setNewMonthDays] = useState([]);
 
         const handleSubmit = (e) => {
             e.preventDefault();
             if (!newText.trim()) return;
-            addPrayer({ text: newText, category: newCat, frequency: newFreq });
+            addPrayer({
+                text: newText,
+                category: newCat,
+                frequency: newFreq,
+                weekDays: newFreq === 'weekly' ? newWeekDays : [],
+                monthDays: newFreq === 'monthly' ? newMonthDays : []
+            });
             setNewText('');
+            setNewWeekDays([]);
+            setNewMonthDays([]);
             setIsAdding(false);
+        };
+
+        const toggleWeekDay = (day) => {
+            setNewWeekDays(prev =>
+                prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+            );
+        };
+
+        const toggleMonthDay = (day) => {
+            setNewMonthDays(prev =>
+                prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+            );
+        };
+
+        // Format schedule badge text for a prayer
+        const scheduleLabel = (p) => {
+            if (p.frequency === 'weekly' && p.weekDays && p.weekDays.length > 0) {
+                return p.weekDays
+                    .slice().sort((a, b) => a - b)
+                    .map(d => t.days_short[d])
+                    .join(', ');
+            }
+            if (p.frequency === 'monthly' && p.monthDays && p.monthDays.length > 0) {
+                return p.monthDays
+                    .slice().sort((a, b) => a - b)
+                    .join(', ');
+            }
+            return null;
         };
 
         return (
@@ -73,6 +111,53 @@ window.Prhay = window.Prhay || {};
                                     </select>
                                 </div>
                             </div>
+
+                            {/* Weekly day picker */}
+                            {newFreq === 'weekly' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-stone-500 mb-2">{t.select_days}</label>
+                                    <div className="flex gap-1.5 justify-between">
+                                        {t.days_short.map((label, i) => (
+                                            <button
+                                                key={i}
+                                                type="button"
+                                                onClick={() => toggleWeekDay(i)}
+                                                className={`w-10 h-10 rounded-full text-xs font-bold transition-colors ${
+                                                    newWeekDays.includes(i)
+                                                        ? 'bg-amber-600 text-white'
+                                                        : 'bg-stone-100 dark:bg-stone-800 text-stone-500'
+                                                }`}
+                                            >
+                                                {label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Monthly day picker */}
+                            {newFreq === 'monthly' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-stone-500 mb-2">{t.select_days}</label>
+                                    <div className="grid grid-cols-7 gap-1.5">
+                                        {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                            <button
+                                                key={day}
+                                                type="button"
+                                                onClick={() => toggleMonthDay(day)}
+                                                className={`h-9 rounded-lg text-xs font-bold transition-colors ${
+                                                    newMonthDays.includes(day)
+                                                        ? 'bg-amber-600 text-white'
+                                                        : 'bg-stone-100 dark:bg-stone-800 text-stone-500'
+                                                }`}
+                                            >
+                                                {day}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             <button type="submit" className="w-full py-3 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700">
                                 {t.save}
                             </button>
@@ -86,27 +171,35 @@ window.Prhay = window.Prhay || {};
                             <p>{t.no_prayers}</p>
                         </div>
                     )}
-                    {prayers.map(p => (
-                        <div key={p.id} className="bg-white dark:bg-stone-900 p-4 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 flex justify-between items-start group">
-                            <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-stone-100 dark:bg-stone-800 text-stone-500 rounded-md">
-                                        {t.categories[p.category] || p.category}
-                                    </span>
-                                    <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-md">
-                                        {p.frequency}
-                                    </span>
+                    {prayers.map(p => {
+                        const days = scheduleLabel(p);
+                        return (
+                            <div key={p.id} className="bg-white dark:bg-stone-900 p-4 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 flex justify-between items-start group">
+                                <div>
+                                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-stone-100 dark:bg-stone-800 text-stone-500 rounded-md">
+                                            {t.categories[p.category] || p.category}
+                                        </span>
+                                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-md">
+                                            {p.frequency}
+                                        </span>
+                                        {days && (
+                                            <span className="text-[10px] font-medium px-2 py-0.5 bg-stone-50 dark:bg-stone-800 text-stone-400 rounded-md">
+                                                {days}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h3 className="font-semibold text-lg leading-tight">{p.text}</h3>
                                 </div>
-                                <h3 className="font-semibold text-lg leading-tight">{p.text}</h3>
+                                <button
+                                    onClick={() => deletePrayer(p.id)}
+                                    className="text-stone-300 hover:text-red-500 p-2"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
                             </div>
-                            <button
-                                onClick={() => deletePrayer(p.id)}
-                                className="text-stone-300 hover:text-red-500 p-2"
-                            >
-                                <Trash2 size={18} />
-                            </button>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
                 <NavBar view="manage" setView={setView} />
             </div>
