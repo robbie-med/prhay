@@ -1,0 +1,21 @@
+/* Font loading for Korean */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+
+/* Card Flip Animation Classes */
+.perspective { perspective: 1000px; }
+.card-inner { transition: transform 0.6s; transform-style: preserve-3d; }
