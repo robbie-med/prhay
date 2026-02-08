@@ -55,8 +55,9 @@ window.Prhay = window.Prhay || {};
         const t = TRANSLATIONS[settings.lang];
 
         // -- Logic: Start Session --
-        const startSession = () => {
-            const queue = buildSessionQueue(prayers, settings.dailyGoal);
+        const startSession = (filter) => {
+            const queue = buildSessionQueue(prayers, settings.dailyGoal, { category: filter || 'all' });
+            if (queue.length === 0) return;
             setSessionQueue(queue);
             setCurrentCardIndex(0);
             setView('session');
@@ -115,6 +116,8 @@ window.Prhay = window.Prhay || {};
                 text: prayer.text,
                 category: prayer.category,
                 frequency: prayer.frequency,
+                weekDays: prayer.weekDays || [],
+                monthDays: prayer.monthDays || [],
                 lastPrayed: 0,
                 createdAt: Date.now()
             };

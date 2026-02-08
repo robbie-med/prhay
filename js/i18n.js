@@ -42,6 +42,10 @@ window.Prhay.TRANSLATIONS = {
         skip: "Skip",
         manage_list: "Manage List",
         filter_all: "All",
+        todays_rotation: "Today",
+        select_days: "Select days",
+        days_short: ["S", "M", "T", "W", "T", "F", "S"],
+        no_cards_for_filter: "No cards match this filter.",
         privacy_note: "Data stored locally on your device.",
         last_prayed: "Last prayed:"
     },
@@ -86,6 +90,10 @@ window.Prhay.TRANSLATIONS = {
         skip: "\uac74\ub108\ub6f0\uae30",
         manage_list: "\ubaa9\ub85d \uad00\ub9ac",
         filter_all: "\uc804\uccb4",
+        todays_rotation: "\uc624\ub298",
+        select_days: "\uc694\uc77c \uc120\ud0dd",
+        days_short: ["\uc77c", "\uc6d4", "\ud654", "\uc218", "\ubaa9", "\uae08", "\ud1a0"],
+        no_cards_for_filter: "\uc774 \ud544\ud130\uc5d0 \ub9de\ub294 \uce74\ub4dc\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
         privacy_note: "\ub370\uc774\ud130\ub294 \uae30\uae30\uc5d0\ub9cc \uc800\uc7a5\ub429\ub2c8\ub2e4.",
         last_prayed: "\ub9c8\uc9c0\ub9c9 \uae30\ub3c4:"
     }
