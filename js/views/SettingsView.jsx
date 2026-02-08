@@ -1,7 +1,12 @@
 window.Prhay = window.Prhay || {};
 
 (() => {
-    const { Moon, Globe, Bell, Download, Upload } = lucide;
+    const icon = window.Prhay.icon;
+    const Moon = icon(lucide.Moon);
+    const Globe = icon(lucide.Globe);
+    const Bell = icon(lucide.Bell);
+    const Download = icon(lucide.Download);
+    const Upload = icon(lucide.Upload);
     const NavBar = window.Prhay.NavBar;
 
     window.Prhay.SettingsView = ({ t, settings, setSettings, prayers, stats, setPrayers, setStats, setView }) => {

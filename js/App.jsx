@@ -51,11 +51,6 @@ window.Prhay = window.Prhay || {};
             }
         }, [settings]);
 
-        // -- Icons Helper --
-        useEffect(() => {
-            lucide.createIcons();
-        });
-
         const t = TRANSLATIONS[settings.lang];
 
         // -- Logic: Start Session --

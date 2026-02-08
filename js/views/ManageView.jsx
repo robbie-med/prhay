@@ -2,7 +2,10 @@ window.Prhay = window.Prhay || {};
 
 (() => {
     const { useState } = React;
-    const { Plus, X, Trash2 } = lucide;
+    const icon = window.Prhay.icon;
+    const Plus = icon(lucide.Plus);
+    const X = icon(lucide.X);
+    const Trash2 = icon(lucide.Trash2);
     const NavBar = window.Prhay.NavBar;
 
     window.Prhay.ManageView = ({ t, prayers, addPrayer, deletePrayer, setView }) => {
