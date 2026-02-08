@@ -1,16 +1,32 @@
 window.Prhay = window.Prhay || {};
 
-window.Prhay.initOneSignal = () => {
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-            appId: "7847fc57-03e6-4e9f-9328-a7b6ae48b31e",
-            safari_web_id: "web.onesignal.auto.054b4fc9-febb-45d1-b366-8fc183da0d9e",
-            notifyButton: {
-                enable: true,
-            },
-            allowLocalhostAsSecureOrigin: true,
+/**
+ * Send a notification via ntfy (https://ntfy.sh).
+ * Works with both ntfy.sh hosted and self-hosted instances.
+ *
+ * @param {string} topicUrl - Full ntfy topic URL (e.g., "https://ntfy.sh/my-prhay")
+ * @param {string} title    - Notification title
+ * @param {string} message  - Notification body text
+ * @param {object} options  - Optional: { tags, priority, delay }
+ */
+window.Prhay.sendNtfyNotification = async (topicUrl, title, message, options = {}) => {
+    if (!topicUrl) return;
+    try {
+        const headers = { 'Title': title };
+        if (options.tags) headers['Tags'] = options.tags;
+        if (options.priority) headers['Priority'] = String(options.priority);
+        if (options.delay) headers['Delay'] = options.delay;
+
+        const response = await fetch(topicUrl, {
+            method: 'POST',
+            body: message,
+            headers
         });
-        console.log("OneSignal initialized");
-    });
+
+        if (!response.ok) {
+            console.warn('ntfy notification failed:', response.status, response.statusText);
+        }
+    } catch (err) {
+        console.warn('ntfy notification failed:', err);
+    }
 };

@@ -39,33 +39,33 @@ window.Prhay = window.Prhay || {};
         };
 
         return (
-            <div className="min-h-screen pb-24 bg-slate-50 dark:bg-slate-950 p-6">
+            <div className="min-h-screen pb-24 bg-stone-50 dark:bg-stone-950 p-6">
                 <h2 className="text-2xl font-bold mb-6 pt-4">{t.settings}</h2>
 
                 <div className="space-y-6">
-                    {/* Visual Section */}
-                    <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-                        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                    {/* Appearance Section */}
+                    <section className="bg-white dark:bg-stone-900 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden">
+                        <div className="p-4 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg"><Moon size={20}/></div>
+                                <div className="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-700 rounded-lg"><Moon size={20}/></div>
                                 <span className="font-medium">{t.dark_mode}</span>
                             </div>
                             <button
                                 onClick={() => setSettings({...settings, darkMode: !settings.darkMode})}
-                                className={`w-12 h-6 rounded-full p-1 transition-colors ${settings.darkMode ? 'bg-blue-600' : 'bg-slate-300'}`}
+                                className={`w-12 h-6 rounded-full p-1 transition-colors ${settings.darkMode ? 'bg-amber-600' : 'bg-stone-300'}`}
                             >
                                 <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform ${settings.darkMode ? 'translate-x-6' : ''}`}></div>
                             </button>
                         </div>
                         <div className="p-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-pink-100 dark:bg-pink-900/30 text-pink-600 rounded-lg"><Globe size={20}/></div>
+                                <div className="p-2 bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300 rounded-lg"><Globe size={20}/></div>
                                 <span className="font-medium">{t.language}</span>
                             </div>
                             <select
                                 value={settings.lang}
                                 onChange={(e) => setSettings({...settings, lang: e.target.value})}
-                                className="bg-slate-100 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none"
+                                className="bg-stone-100 dark:bg-stone-800 rounded-lg p-2 text-sm outline-none"
                             >
                                 <option value="en">English</option>
                                 <option value="ko">{'\ud55c\uad6d\uc5b4'}</option>
@@ -73,30 +73,49 @@ window.Prhay = window.Prhay || {};
                         </div>
                     </section>
 
-                    {/* Notifications Section */}
-                    <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-                        <div className="p-4 flex justify-between items-center">
+                    {/* Notifications Section (ntfy) */}
+                    <section className="bg-white dark:bg-stone-900 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden">
+                        <div className="p-4 space-y-3">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 rounded-lg"><Bell size={20}/></div>
+                                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-lg"><Bell size={20}/></div>
                                 <span className="font-medium">{t.notifications}</span>
+                            </div>
+                            <p className="text-xs text-stone-400">{t.ntfy_description}</p>
+                            <div>
+                                <label className="block text-sm font-medium text-stone-500 mb-1">{t.ntfy_topic}</label>
+                                <input
+                                    type="url"
+                                    value={settings.ntfyTopic || ''}
+                                    onChange={(e) => setSettings({...settings, ntfyTopic: e.target.value})}
+                                    placeholder={t.ntfy_placeholder}
+                                    className="w-full p-3 bg-stone-50 dark:bg-stone-800 rounded-xl outline-none text-sm"
+                                />
                             </div>
                             <button
                                 onClick={() => {
-                                    if(window.OneSignalDeferred) window.OneSignalDeferred.push(os => os.showSlidedownPrompt());
+                                    if (settings.ntfyTopic) {
+                                        window.Prhay.sendNtfyNotification(
+                                            settings.ntfyTopic,
+                                            t.app_name,
+                                            t.ntfy_test_body,
+                                            { tags: 'pray' }
+                                        );
+                                    }
                                 }}
-                                className="text-sm font-bold text-blue-600 hover:underline"
+                                disabled={!settings.ntfyTopic}
+                                className="w-full p-3 bg-amber-600 text-white rounded-xl font-medium hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {t.enable_notify}
+                                {t.ntfy_test}
                             </button>
                         </div>
                     </section>
 
                     {/* Data Section */}
-                    <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden p-4 space-y-4">
-                        <button onClick={exportData} className="w-full flex items-center justify-center gap-2 p-3 bg-slate-100 dark:bg-slate-800 rounded-xl font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <section className="bg-white dark:bg-stone-900 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden p-4 space-y-4">
+                        <button onClick={exportData} className="w-full flex items-center justify-center gap-2 p-3 bg-stone-100 dark:bg-stone-800 rounded-xl font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">
                             <Download size={18} /> {t.export}
                         </button>
-                        <label className="w-full flex items-center justify-center gap-2 p-3 bg-slate-100 dark:bg-slate-800 rounded-xl font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+                        <label className="w-full flex items-center justify-center gap-2 p-3 bg-stone-100 dark:bg-stone-800 rounded-xl font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors cursor-pointer">
                             <Upload size={18} /> {t.import}
                             <input type="file" onChange={importData} accept=".json" className="hidden" />
                         </label>

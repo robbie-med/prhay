@@ -9,10 +9,10 @@ window.Prhay = window.Prhay || {};
                 <Check size={48} />
             </div>
             <h2 className="text-3xl font-bold mb-2">{t.session_complete}</h2>
-            <p className="text-slate-500 mb-8">{t.session_complete_sub}</p>
+            <p className="text-stone-500 mb-8">{t.session_complete_sub}</p>
             <button
                 onClick={() => setView('home')}
-                className="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold hover:opacity-90 transition-opacity"
+                className="px-8 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-xl font-bold hover:opacity-90 transition-opacity"
             >
                 {t.back_home}
             </button>

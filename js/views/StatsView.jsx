@@ -24,21 +24,21 @@ window.Prhay = window.Prhay || {};
         }, {});
 
         return (
-            <div className="min-h-screen pb-24 bg-slate-50 dark:bg-slate-950 p-6">
+            <div className="min-h-screen pb-24 bg-stone-50 dark:bg-stone-950 p-6">
                 <h2 className="text-2xl font-bold mb-6 pt-4">{t.stats}</h2>
 
                 {/* Heatmap */}
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
-                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Activity (Last 28 Days)</h3>
+                <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800 mb-6">
+                    <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4">Activity (Last 28 Days)</h3>
                     <div className="grid grid-cols-7 gap-2">
                         {days.map(d => (
                             <div key={d.date} className="flex flex-col items-center">
                                 <div
                                     className={`w-full aspect-square rounded-md ${
-                                        d.count === 0 ? 'bg-slate-100 dark:bg-slate-800' :
-                                        d.count < 3 ? 'bg-blue-300 dark:bg-blue-800' :
-                                        d.count < 6 ? 'bg-blue-500 dark:bg-blue-600' :
-                                        'bg-blue-700 dark:bg-blue-400'
+                                        d.count === 0 ? 'bg-stone-100 dark:bg-stone-800' :
+                                        d.count < 3 ? 'bg-amber-300 dark:bg-amber-800' :
+                                        d.count < 6 ? 'bg-amber-500 dark:bg-amber-600' :
+                                        'bg-amber-700 dark:bg-amber-400'
                                     }`}
                                     title={`${d.date}: ${d.count}`}
                                 ></div>
@@ -48,8 +48,8 @@ window.Prhay = window.Prhay || {};
                 </div>
 
                 {/* Category Breakdown */}
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
-                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Focus Areas</h3>
+                <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800">
+                    <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4">Focus Areas</h3>
                     <div className="space-y-3">
                         {Object.keys(t.categories).map(cat => {
                             const count = catCounts[cat] || 0;
@@ -59,11 +59,11 @@ window.Prhay = window.Prhay || {};
                                 <div key={cat}>
                                     <div className="flex justify-between text-sm mb-1">
                                         <span>{t.categories[cat]}</span>
-                                        <span className="text-slate-500">{count}</span>
+                                        <span className="text-stone-500">{count}</span>
                                     </div>
-                                    <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+                                    <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-2">
                                         <div
-                                            className="bg-slate-800 dark:bg-slate-200 h-2 rounded-full"
+                                            className="bg-stone-800 dark:bg-stone-200 h-2 rounded-full"
                                             style={{ width: `${pct}%` }}
                                         ></div>
                                     </div>

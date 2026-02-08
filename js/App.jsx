@@ -3,7 +3,7 @@ window.Prhay = window.Prhay || {};
 (() => {
     const { useState, useEffect } = React;
     const {
-        TRANSLATIONS, initOneSignal, buildSessionQueue,
+        TRANSLATIONS, sendNtfyNotification, buildSessionQueue,
         HomeView, SessionView, CompleteView,
         ManageView, StatsView, SettingsView
     } = window.Prhay;
@@ -18,7 +18,8 @@ window.Prhay = window.Prhay || {};
         const [settings, setSettings] = useState({
             darkMode: true,
             lang: 'en',
-            dailyGoal: 5
+            dailyGoal: 5,
+            ntfyTopic: ''
         });
 
         // -- Load / Save Logic --
@@ -31,7 +32,7 @@ window.Prhay = window.Prhay || {};
             if (loadedStats) setStats(JSON.parse(loadedStats));
             if (loadedSettings) setSettings(JSON.parse(loadedSettings));
 
-            initOneSignal();
+            // ntfy notifications are sent on-demand (no init needed)
         }, []);
 
         useEffect(() => {
@@ -95,6 +96,15 @@ window.Prhay = window.Prhay || {};
                 setCurrentCardIndex(prev => prev + 1);
             } else {
                 setView('complete');
+                // Schedule a reminder for tomorrow via ntfy
+                if (settings.ntfyTopic) {
+                    sendNtfyNotification(
+                        settings.ntfyTopic,
+                        t.app_name,
+                        t.session_complete_sub,
+                        { tags: 'pray', delay: '24h' }
+                    );
+                }
             }
         };
 
