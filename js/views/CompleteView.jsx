@@ -1,7 +1,7 @@
 window.Prhay = window.Prhay || {};
 
 (() => {
-    const { Check } = lucide;
+    const Check = window.Prhay.icon(lucide.Check);
 
     window.Prhay.CompleteView = ({ t, setView }) => (
         <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">

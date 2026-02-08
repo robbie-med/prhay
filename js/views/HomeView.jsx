@@ -1,7 +1,9 @@
 window.Prhay = window.Prhay || {};
 
 (() => {
-    const { RotateCcw, ChevronRight } = lucide;
+    const icon = window.Prhay.icon;
+    const RotateCcw = icon(lucide.RotateCcw);
+    const ChevronRight = icon(lucide.ChevronRight);
     const NavBar = window.Prhay.NavBar;
 
     window.Prhay.HomeView = ({ t, stats, settings, prayers, startSession, setView }) => (

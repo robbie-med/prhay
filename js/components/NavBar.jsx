@@ -1,7 +1,11 @@
 window.Prhay = window.Prhay || {};
 
 (() => {
-    const { Home, List, BarChart2, Settings } = lucide;
+    const icon = window.Prhay.icon;
+    const Home = icon(lucide.Home);
+    const List = icon(lucide.List);
+    const BarChart2 = icon(lucide.BarChart2);
+    const Settings = icon(lucide.Settings);
 
     window.Prhay.NavBar = ({ view, setView }) => (
         <nav className="fixed bottom-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-4 flex justify-around items-center z-50">

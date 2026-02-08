@@ -1,7 +1,7 @@
 window.Prhay = window.Prhay || {};
 
 (() => {
-    const { X } = lucide;
+    const X = window.Prhay.icon(lucide.X);
 
     window.Prhay.SessionView = ({ t, sessionQueue, currentCardIndex, handlePrayed, nextCard, setView }) => {
         const currentCard = sessionQueue[currentCardIndex];
