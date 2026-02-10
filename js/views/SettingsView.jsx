@@ -1,15 +1,23 @@
 window.Prhay = window.Prhay || {};
 
 (() => {
+    const { useState } = React;
     const icon = window.Prhay.icon;
     const Moon = icon(lucide.Moon);
     const Globe = icon(lucide.Globe);
     const Bell = icon(lucide.Bell);
     const Download = icon(lucide.Download);
     const Upload = icon(lucide.Upload);
+    const Plus = icon(lucide.Plus);
+    const Minus = icon(lucide.Minus);
+    const X = icon(lucide.X);
+    const List = icon(lucide.List);
     const NavBar = window.Prhay.NavBar;
+    const getListLabel = window.Prhay.getListLabel;
 
     window.Prhay.SettingsView = ({ t, settings, setSettings, prayers, stats, setPrayers, setStats, setView }) => {
+        const [newListName, setNewListName] = useState('');
+
         const exportData = () => {
             const dataStr = JSON.stringify({ prayers, stats, settings });
             const blob = new Blob([dataStr], { type: 'application/json' });
@@ -36,6 +44,28 @@ window.Prhay = window.Prhay || {};
                 }
             };
             reader.readAsText(file);
+        };
+
+        const lists = settings.lists || [];
+
+        const updateListCount = (index, delta) => {
+            const updated = lists.map((l, i) =>
+                i === index ? { ...l, count: Math.max(0, l.count + delta) } : l
+            );
+            setSettings({ ...settings, lists: updated });
+        };
+
+        const removeList = (index) => {
+            if (!confirm(t.delete_list_confirm)) return;
+            setSettings({ ...settings, lists: lists.filter((_, i) => i !== index) });
+        };
+
+        const addList = () => {
+            const name = newListName.trim();
+            if (!name) return;
+            if (lists.some(l => l.name.toLowerCase() === name.toLowerCase())) return;
+            setSettings({ ...settings, lists: [...lists, { name, count: 1 }] });
+            setNewListName('');
         };
 
         return (
@@ -70,6 +100,71 @@ window.Prhay = window.Prhay || {};
                                 <option value="en">English</option>
                                 <option value="ko">{'\ud55c\uad6d\uc5b4'}</option>
                             </select>
+                        </div>
+                    </section>
+
+                    {/* Prayer Lists Section */}
+                    <section className="bg-white dark:bg-stone-900 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden">
+                        <div className="p-4 border-b border-stone-100 dark:border-stone-800">
+                            <div className="flex items-center gap-3 mb-1">
+                                <div className="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-700 rounded-lg"><List size={20}/></div>
+                                <span className="font-medium">{t.lists_section}</span>
+                            </div>
+                            <p className="text-xs text-stone-400 ml-11">{t.lists_description}</p>
+                        </div>
+
+                        <div className="divide-y divide-stone-100 dark:divide-stone-800">
+                            {lists.map((list, i) => {
+                                const itemCount = prayers.filter(p => p.category === list.name).length;
+                                return (
+                                    <div key={list.name} className="p-4 flex items-center justify-between">
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-medium text-sm">{getListLabel(list.name, t)}</p>
+                                            <p className="text-xs text-stone-400">{itemCount} items</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => updateListCount(i, -1)}
+                                                className="w-8 h-8 rounded-full bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                            >
+                                                <Minus size={14} />
+                                            </button>
+                                            <span className="w-8 text-center font-bold text-sm">{list.count}</span>
+                                            <button
+                                                onClick={() => updateListCount(i, 1)}
+                                                className="w-8 h-8 rounded-full bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                            >
+                                                <Plus size={14} />
+                                            </button>
+                                            <span className="text-xs text-stone-400 w-8">{t.per_day}</span>
+                                            <button
+                                                onClick={() => removeList(i)}
+                                                className="w-8 h-8 rounded-full flex items-center justify-center text-stone-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="p-4 border-t border-stone-100 dark:border-stone-800 flex gap-2">
+                            <input
+                                type="text"
+                                value={newListName}
+                                onChange={(e) => setNewListName(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && addList()}
+                                placeholder={t.new_list_placeholder}
+                                className="flex-1 p-2 bg-stone-50 dark:bg-stone-800 rounded-xl outline-none text-sm"
+                            />
+                            <button
+                                onClick={addList}
+                                disabled={!newListName.trim()}
+                                className="px-4 py-2 bg-amber-600 text-white rounded-xl text-sm font-medium hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {t.add_list}
+                            </button>
                         </div>
                     </section>
 

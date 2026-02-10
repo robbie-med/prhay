@@ -2,6 +2,7 @@ window.Prhay = window.Prhay || {};
 
 (() => {
     const X = window.Prhay.icon(lucide.X);
+    const getListLabel = window.Prhay.getListLabel;
 
     window.Prhay.SessionView = ({ t, sessionQueue, currentCardIndex, handlePrayed, nextCard, setView }) => {
         const currentCard = sessionQueue[currentCardIndex];
@@ -28,7 +29,7 @@ window.Prhay = window.Prhay || {};
                         {/* Decorative Category Tag */}
                         <div className="absolute top-0 right-0 p-6">
                             <span className="px-3 py-1 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold uppercase tracking-widest rounded-full">
-                                {t.categories[currentCard.category] || currentCard.category}
+                                {getListLabel(currentCard.category, t)}
                             </span>
                         </div>
 

@@ -5,10 +5,9 @@ window.Prhay.TRANSLATIONS = {
         app_name: "Prhay",
         start_session: "Start Session",
         cards_today: "Cards for today",
-        streak: "Day Streak",
         add_new: "Add New Prayer",
         title_placeholder: "What needs prayer?",
-        category: "Category",
+        category: "List",
         frequency: "Frequency",
         save: "Save",
         daily: "Daily",
@@ -54,16 +53,24 @@ window.Prhay.TRANSLATIONS = {
         update: "Update",
         welcome_title: "Welcome to Prhay",
         welcome_body: "A private, focused space for your prayer life. Everything stays on your device \u2014 no accounts, no cloud, no tracking. Just you and your prayers.",
-        welcome_dismiss: "Let\u2019s begin"
+        welcome_dismiss: "Let\u2019s begin",
+        lists_section: "Prayer Lists",
+        lists_description: "Manage your lists and how many items from each appear in Today\u2019s rotation.",
+        add_list: "Add list",
+        new_list_placeholder: "New list name",
+        per_day: "/day",
+        pray_for_prompt: "Pray for",
+        delete_list_confirm: "Delete this list? Prayers in it won\u2019t be removed.",
+        activity: "Activity (Last 28 Days)",
+        focus_areas: "Focus Areas"
     },
     ko: {
         app_name: "\ud504\ub808\uc774 (Prhay)",
         start_session: "\uae30\ub3c4 \uc2dc\uc791\ud558\uae30",
         cards_today: "\uc624\ub298\uc758 \uae30\ub3c4 \uce74\ub4dc",
-        streak: "\uc5f0\uc18d \uc77c\uc218",
         add_new: "\uc0c8 \uae30\ub3c4 \uc81c\ubaa9 \ucd94\uac00",
         title_placeholder: "\ubb34\uc5c7\uc744 \uc704\ud574 \uae30\ub3c4\ud560\uae4c\uc694?",
-        category: "\uce74\ud14c\uace0\ub9ac",
+        category: "\ubaa9\ub85d",
         frequency: "\ube48\ub3c4",
         save: "\uc800\uc7a5",
         daily: "\ub9e4\uc77c",
@@ -109,6 +116,20 @@ window.Prhay.TRANSLATIONS = {
         update: "\uc218\uc815",
         welcome_title: "Prhay\uc5d0 \uc624\uc2e0 \uac83\uc744 \ud658\uc601\ud569\ub2c8\ub2e4",
         welcome_body: "\uae30\ub3c4 \uc0dd\ud65c\uc744 \uc704\ud55c \uc0ac\uc801\uc778 \uacf5\uac04\uc785\ub2c8\ub2e4. \ubaa8\ub4e0 \ub370\uc774\ud130\ub294 \uae30\uae30\uc5d0\ub9cc \uc800\uc7a5\ub429\ub2c8\ub2e4. \uacc4\uc815\ub3c4, \ud074\ub77c\uc6b0\ub4dc\ub3c4, \ucd94\uc801\ub3c4 \uc5c6\uc2b5\ub2c8\ub2e4.",
-        welcome_dismiss: "\uc2dc\uc791\ud558\uae30"
+        welcome_dismiss: "\uc2dc\uc791\ud558\uae30",
+        lists_section: "\uae30\ub3c4 \ubaa9\ub85d",
+        lists_description: "\ubaa9\ub85d\uacfc \uc624\ub298\uc758 \ub85c\ud14c\uc774\uc158\uc5d0 \ud45c\uc2dc\ub420 \ud56d\ubaa9 \uc218\ub97c \uad00\ub9ac\ud558\uc138\uc694.",
+        add_list: "\ubaa9\ub85d \ucd94\uac00",
+        new_list_placeholder: "\uc0c8 \ubaa9\ub85d \uc774\ub984",
+        per_day: "/\uc77c",
+        pray_for_prompt: "\uc704\ud574 \uae30\ub3c4\ud558\uc138\uc694",
+        delete_list_confirm: "\uc774 \ubaa9\ub85d\uc744 \uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c? \uae30\ub3c4 \ud56d\ubaa9\uc740 \uc0ad\uc81c\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+        activity: "\ud65c\ub3d9 (\ucd5c\uadfc 28\uc77c)",
+        focus_areas: "\uae30\ub3c4 \uc601\uc5ed"
     }
+};
+
+// Helper to get a display label for a list name (uses i18n if available, raw name otherwise)
+window.Prhay.getListLabel = function(name, t) {
+    return (t.categories && t.categories[name]) || name;
 };

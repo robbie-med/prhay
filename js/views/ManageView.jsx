@@ -10,11 +10,14 @@ window.Prhay = window.Prhay || {};
     const Check = icon(lucide.Check);
     const NavBar = window.Prhay.NavBar;
 
-    window.Prhay.ManageView = ({ t, prayers, addPrayer, updatePrayer, deletePrayer, setView }) => {
+    const getListLabel = window.Prhay.getListLabel;
+
+    window.Prhay.ManageView = ({ t, settings, prayers, addPrayer, updatePrayer, deletePrayer, setView }) => {
+        const lists = (settings.lists || []).map(l => l.name);
         const [isAdding, setIsAdding] = useState(false);
         const [newText, setNewText] = useState('');
         const [newNotes, setNewNotes] = useState('');
-        const [newCat, setNewCat] = useState('Personal');
+        const [newCat, setNewCat] = useState(lists[0] || 'Personal');
         const [newFreq, setNewFreq] = useState('daily');
         const [newWeekDays, setNewWeekDays] = useState([]);
         const [newMonthDays, setNewMonthDays] = useState([]);
@@ -185,8 +188,8 @@ window.Prhay = window.Prhay || {};
                                         onChange={(e) => setNewCat(e.target.value)}
                                         className="w-full p-3 bg-stone-50 dark:bg-stone-800 rounded-xl outline-none"
                                     >
-                                        {Object.keys(t.categories).map(k => (
-                                            <option key={k} value={k}>{t.categories[k]}</option>
+                                        {lists.map(k => (
+                                            <option key={k} value={k}>{getListLabel(k, t)}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -248,8 +251,8 @@ window.Prhay = window.Prhay || {};
                                                 onChange={(e) => setEditCat(e.target.value)}
                                                 className="flex-1 p-2 bg-stone-50 dark:bg-stone-800 rounded-xl outline-none text-sm"
                                             >
-                                                {Object.keys(t.categories).map(k => (
-                                                    <option key={k} value={k}>{t.categories[k]}</option>
+                                                {lists.map(k => (
+                                                    <option key={k} value={k}>{getListLabel(k, t)}</option>
                                                 ))}
                                             </select>
                                             <select
@@ -289,7 +292,7 @@ window.Prhay = window.Prhay || {};
                                 <div className="flex-1 min-w-0" onClick={() => startEdit(p)} style={{ cursor: 'pointer' }}>
                                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                                         <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-stone-100 dark:bg-stone-800 text-stone-500 rounded-md">
-                                            {t.categories[p.category] || p.category}
+                                            {getListLabel(p.category, t)}
                                         </span>
                                         <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-md">
                                             {p.frequency}

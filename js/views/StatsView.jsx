@@ -2,8 +2,11 @@ window.Prhay = window.Prhay || {};
 
 (() => {
     const NavBar = window.Prhay.NavBar;
+    const getListLabel = window.Prhay.getListLabel;
 
-    window.Prhay.StatsView = ({ t, stats, prayers, setView }) => {
+    window.Prhay.StatsView = ({ t, stats, settings, prayers, setView }) => {
+        const lists = (settings.lists || []).map(l => l.name);
+
         // Generate heatmap data for last 28 days
         const days = [];
         const today = new Date();
@@ -17,11 +20,14 @@ window.Prhay = window.Prhay || {};
             });
         }
 
-        // Breakdown by category
+        // Breakdown by list (dynamic)
         const catCounts = prayers.reduce((acc, p) => {
             acc[p.category] = (acc[p.category] || 0) + 1;
             return acc;
         }, {});
+
+        // Merge dynamic lists with any categories found in prayers
+        const allCats = [...new Set([...lists, ...Object.keys(catCounts)])];
 
         return (
             <div className="min-h-screen pb-24 bg-stone-50 dark:bg-stone-950 p-6">
@@ -29,7 +35,7 @@ window.Prhay = window.Prhay || {};
 
                 {/* Heatmap */}
                 <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800 mb-6">
-                    <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4">Activity (Last 28 Days)</h3>
+                    <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4">{t.activity}</h3>
                     <div className="grid grid-cols-7 gap-2">
                         {days.map(d => (
                             <div key={d.date} className="flex flex-col items-center">
@@ -49,16 +55,16 @@ window.Prhay = window.Prhay || {};
 
                 {/* Category Breakdown */}
                 <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800">
-                    <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4">Focus Areas</h3>
+                    <h3 className="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4">{t.focus_areas}</h3>
                     <div className="space-y-3">
-                        {Object.keys(t.categories).map(cat => {
+                        {allCats.map(cat => {
                             const count = catCounts[cat] || 0;
                             const total = prayers.length || 1;
                             const pct = (count / total) * 100;
                             return (
                                 <div key={cat}>
                                     <div className="flex justify-between text-sm mb-1">
-                                        <span>{t.categories[cat]}</span>
+                                        <span>{getListLabel(cat, t)}</span>
                                         <span className="text-stone-500">{count}</span>
                                     </div>
                                     <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-2">
