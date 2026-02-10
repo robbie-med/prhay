@@ -5,7 +5,7 @@ window.Prhay = window.Prhay || {};
     const {
         TRANSLATIONS, sendNtfyNotification, buildSessionQueue,
         HomeView, SessionView, CompleteView,
-        ManageView, StatsView, SettingsView
+        ManageView, StatsView, SettingsView, WelcomeModal
     } = window.Prhay;
 
     const App = () => {
@@ -21,6 +21,7 @@ window.Prhay = window.Prhay || {};
             dailyGoal: 5,
             ntfyTopic: ''
         });
+        const [showWelcome, setShowWelcome] = useState(false);
 
         // -- Load / Save Logic --
         useEffect(() => {
@@ -32,7 +33,10 @@ window.Prhay = window.Prhay || {};
             if (loadedStats) setStats(JSON.parse(loadedStats));
             if (loadedSettings) setSettings(JSON.parse(loadedSettings));
 
-            // ntfy notifications are sent on-demand (no init needed)
+            // Show welcome modal on first visit
+            if (!localStorage.getItem('prhay_welcomed')) {
+                setShowWelcome(true);
+            }
         }, []);
 
         useEffect(() => {
@@ -51,6 +55,11 @@ window.Prhay = window.Prhay || {};
                 document.documentElement.classList.remove('dark');
             }
         }, [settings]);
+
+        const dismissWelcome = () => {
+            localStorage.setItem('prhay_welcomed', '1');
+            setShowWelcome(false);
+        };
 
         const t = TRANSLATIONS[settings.lang];
 
@@ -114,6 +123,7 @@ window.Prhay = window.Prhay || {};
             const newPrayer = {
                 id: Date.now(),
                 text: prayer.text,
+                notes: prayer.notes || '',
                 category: prayer.category,
                 frequency: prayer.frequency,
                 weekDays: prayer.weekDays || [],
@@ -124,6 +134,12 @@ window.Prhay = window.Prhay || {};
             setPrayers([newPrayer, ...prayers]);
         };
 
+        const updatePrayer = (id, updates) => {
+            setPrayers(prayers.map(p =>
+                p.id === id ? { ...p, ...updates } : p
+            ));
+        };
+
         const deletePrayer = (id) => {
             if (confirm(t.delete_confirm)) {
                 setPrayers(prayers.filter(p => p.id !== id));
@@ -131,26 +147,34 @@ window.Prhay = window.Prhay || {};
         };
 
         // -- View Routing --
-        if (view === 'home') {
-            return <HomeView t={t} stats={stats} settings={settings} prayers={prayers} startSession={startSession} setView={setView} />;
-        }
-        if (view === 'session') {
-            return <SessionView t={t} sessionQueue={sessionQueue} currentCardIndex={currentCardIndex} handlePrayed={handlePrayed} nextCard={nextCard} setView={setView} />;
-        }
-        if (view === 'complete') {
-            return <CompleteView t={t} setView={setView} />;
-        }
-        if (view === 'manage') {
-            return <ManageView t={t} prayers={prayers} addPrayer={addPrayer} deletePrayer={deletePrayer} setView={setView} />;
-        }
-        if (view === 'stats') {
-            return <StatsView t={t} stats={stats} prayers={prayers} setView={setView} />;
-        }
-        if (view === 'settings') {
-            return <SettingsView t={t} settings={settings} setSettings={setSettings} prayers={prayers} stats={stats} setPrayers={setPrayers} setStats={setStats} setView={setView} />;
-        }
+        const currentView = (() => {
+            if (view === 'home') {
+                return <HomeView t={t} lang={settings.lang} stats={stats} settings={settings} prayers={prayers} startSession={startSession} setView={setView} />;
+            }
+            if (view === 'session') {
+                return <SessionView t={t} sessionQueue={sessionQueue} currentCardIndex={currentCardIndex} handlePrayed={handlePrayed} nextCard={nextCard} setView={setView} />;
+            }
+            if (view === 'complete') {
+                return <CompleteView t={t} setView={setView} />;
+            }
+            if (view === 'manage') {
+                return <ManageView t={t} prayers={prayers} addPrayer={addPrayer} updatePrayer={updatePrayer} deletePrayer={deletePrayer} setView={setView} />;
+            }
+            if (view === 'stats') {
+                return <StatsView t={t} stats={stats} prayers={prayers} setView={setView} />;
+            }
+            if (view === 'settings') {
+                return <SettingsView t={t} settings={settings} setSettings={setSettings} prayers={prayers} stats={stats} setPrayers={setPrayers} setStats={setStats} setView={setView} />;
+            }
+            return null;
+        })();
 
-        return null;
+        return (
+            <>
+                {currentView}
+                {showWelcome && <WelcomeModal t={t} onDismiss={dismissWelcome} />}
+            </>
+        );
     };
 
     const root = ReactDOM.createRoot(document.getElementById('root'));

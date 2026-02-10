@@ -47,7 +47,14 @@ window.Prhay.TRANSLATIONS = {
         days_short: ["S", "M", "T", "W", "T", "F", "S"],
         no_cards_for_filter: "No cards match this filter.",
         privacy_note: "Data stored locally on your device.",
-        last_prayed: "Last prayed:"
+        last_prayed: "Last prayed:",
+        notes_placeholder: "Notes (optional)",
+        edit: "Edit",
+        cancel: "Cancel",
+        update: "Update",
+        welcome_title: "Welcome to Prhay",
+        welcome_body: "A private, focused space for your prayer life. Everything stays on your device \u2014 no accounts, no cloud, no tracking. Just you and your prayers.",
+        welcome_dismiss: "Let\u2019s begin"
     },
     ko: {
         app_name: "\ud504\ub808\uc774 (Prhay)",
@@ -95,6 +102,13 @@ window.Prhay.TRANSLATIONS = {
         days_short: ["\uc77c", "\uc6d4", "\ud654", "\uc218", "\ubaa9", "\uae08", "\ud1a0"],
         no_cards_for_filter: "\uc774 \ud544\ud130\uc5d0 \ub9de\ub294 \uce74\ub4dc\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
         privacy_note: "\ub370\uc774\ud130\ub294 \uae30\uae30\uc5d0\ub9cc \uc800\uc7a5\ub429\ub2c8\ub2e4.",
-        last_prayed: "\ub9c8\uc9c0\ub9c9 \uae30\ub3c4:"
+        last_prayed: "\ub9c8\uc9c0\ub9c9 \uae30\ub3c4:",
+        notes_placeholder: "\uba54\ubaa8 (\uc120\ud0dd\uc0ac\ud56d)",
+        edit: "\ud3b8\uc9d1",
+        cancel: "\ucde8\uc18c",
+        update: "\uc218\uc815",
+        welcome_title: "Prhay\uc5d0 \uc624\uc2e0 \uac83\uc744 \ud658\uc601\ud569\ub2c8\ub2e4",
+        welcome_body: "\uae30\ub3c4 \uc0dd\ud65c\uc744 \uc704\ud55c \uc0ac\uc801\uc778 \uacf5\uac04\uc785\ub2c8\ub2e4. \ubaa8\ub4e0 \ub370\uc774\ud130\ub294 \uae30\uae30\uc5d0\ub9cc \uc800\uc7a5\ub429\ub2c8\ub2e4. \uacc4\uc815\ub3c4, \ud074\ub77c\uc6b0\ub4dc\ub3c4, \ucd94\uc801\ub3c4 \uc5c6\uc2b5\ub2c8\ub2e4.",
+        welcome_dismiss: "\uc2dc\uc791\ud558\uae30"
     }
 };

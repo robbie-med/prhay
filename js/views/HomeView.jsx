@@ -7,8 +7,9 @@ window.Prhay = window.Prhay || {};
     const ChevronRight = icon(lucide.ChevronRight);
     const NavBar = window.Prhay.NavBar;
     const buildSessionQueue = window.Prhay.buildSessionQueue;
+    const getWeeklyVerse = window.Prhay.getWeeklyVerse;
 
-    window.Prhay.HomeView = ({ t, stats, settings, prayers, startSession, setView }) => {
+    window.Prhay.HomeView = ({ t, lang, stats, settings, prayers, startSession, setView }) => {
         const [selectedFilter, setSelectedFilter] = useState('all');
 
         const filters = [
@@ -21,13 +22,24 @@ window.Prhay = window.Prhay || {};
             [prayers, settings.dailyGoal, selectedFilter]
         );
 
+        const verse = useMemo(() => getWeeklyVerse(lang), [lang]);
+
         return (
             <div className="min-h-screen pb-24 flex flex-col items-center justify-center p-6">
                 <div className="mb-8 text-center">
                     <h1 className="text-4xl font-bold tracking-tight mb-2 bg-gradient-to-r from-amber-600 to-amber-900 bg-clip-text text-transparent">
                         {t.app_name}
                     </h1>
-                    <p className="text-stone-500 dark:text-stone-400">{t.privacy_note}</p>
+                    {verse && (
+                        <div className="max-w-xs mx-auto">
+                            <p className="text-stone-400 dark:text-stone-500 text-sm leading-relaxed italic" style={{ fontFamily: "'Crimson Text', serif" }}>
+                                {"\u201C"}{verse.text}{"\u201D"}
+                            </p>
+                            <p className="text-stone-400 dark:text-stone-600 text-xs mt-1 font-medium" style={{ fontFamily: "'Crimson Text', serif" }}>
+                                {"\u2014 "}{verse.ref}
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 <div className="w-full max-w-md bg-white dark:bg-stone-900 rounded-3xl p-8 shadow-xl border border-stone-100 dark:border-stone-800 mb-6">
