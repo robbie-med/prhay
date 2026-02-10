@@ -4,9 +4,18 @@ window.Prhay = window.Prhay || {};
     const { useState, useEffect } = React;
     const {
         TRANSLATIONS, sendNtfyNotification, buildSessionQueue,
+        markPrayedInRotation, resetTodayCache,
         HomeView, SessionView, CompleteView,
         ManageView, StatsView, SettingsView, WelcomeModal
     } = window.Prhay;
+
+    const DEFAULT_LISTS = [
+        { name: 'Personal', count: 2 },
+        { name: 'Family', count: 1 },
+        { name: 'Church', count: 1 },
+        { name: 'World', count: 1 },
+        { name: 'Work', count: 0 }
+    ];
 
     const App = () => {
         // -- State --
@@ -14,12 +23,12 @@ window.Prhay = window.Prhay || {};
         const [prayers, setPrayers] = useState([]);
         const [sessionQueue, setSessionQueue] = useState([]);
         const [currentCardIndex, setCurrentCardIndex] = useState(0);
-        const [stats, setStats] = useState({ streak: 0, lastDate: null, history: {} });
+        const [stats, setStats] = useState({ lastDate: null, history: {} });
         const [settings, setSettings] = useState({
             darkMode: true,
             lang: 'en',
-            dailyGoal: 5,
-            ntfyTopic: ''
+            ntfyTopic: '',
+            lists: DEFAULT_LISTS
         });
         const [showWelcome, setShowWelcome] = useState(false);
 
@@ -31,9 +40,13 @@ window.Prhay = window.Prhay || {};
 
             if (loadedPrayers) setPrayers(JSON.parse(loadedPrayers));
             if (loadedStats) setStats(JSON.parse(loadedStats));
-            if (loadedSettings) setSettings(JSON.parse(loadedSettings));
+            if (loadedSettings) {
+                const parsed = JSON.parse(loadedSettings);
+                // Migrate: ensure lists array exists
+                if (!parsed.lists) parsed.lists = DEFAULT_LISTS;
+                setSettings(parsed);
+            }
 
-            // Show welcome modal on first visit
             if (!localStorage.getItem('prhay_welcomed')) {
                 setShowWelcome(true);
             }
@@ -65,7 +78,7 @@ window.Prhay = window.Prhay || {};
 
         // -- Logic: Start Session --
         const startSession = (filter) => {
-            const queue = buildSessionQueue(prayers, settings.dailyGoal, { category: filter || 'all' });
+            const queue = buildSessionQueue(prayers, settings, { category: filter || 'all' });
             if (queue.length === 0) return;
             setSessionQueue(queue);
             setCurrentCardIndex(0);
@@ -77,27 +90,19 @@ window.Prhay = window.Prhay || {};
             const now = new Date().getTime();
             const todayStr = new Date().toISOString().split('T')[0];
 
+            const prayedItem = prayers.find(p => p.id === id);
             const updatedPrayers = prayers.map(p =>
                 p.id === id ? { ...p, lastPrayed: now, count: (p.count || 0) + 1 } : p
             );
             setPrayers(updatedPrayers);
 
-            const newHistory = { ...stats.history, [todayStr]: (stats.history[todayStr] || 0) + 1 };
-
-            let newStreak = stats.streak;
-            if (stats.lastDate !== todayStr) {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-                if (stats.lastDate === yesterdayStr) {
-                    newStreak++;
-                } else if (stats.lastDate !== todayStr) {
-                    newStreak = 1;
-                }
+            // Track in rotation state
+            if (prayedItem) {
+                markPrayedInRotation(id, prayedItem.category);
             }
 
-            setStats({ ...stats, streak: newStreak, lastDate: todayStr, history: newHistory });
+            const newHistory = { ...stats.history, [todayStr]: (stats.history[todayStr] || 0) + 1 };
+            setStats({ ...stats, lastDate: todayStr, history: newHistory });
             nextCard();
         };
 
@@ -106,7 +111,6 @@ window.Prhay = window.Prhay || {};
                 setCurrentCardIndex(prev => prev + 1);
             } else {
                 setView('complete');
-                // Schedule a reminder for tomorrow via ntfy
                 if (settings.ntfyTopic) {
                     sendNtfyNotification(
                         settings.ntfyTopic,
@@ -116,6 +120,13 @@ window.Prhay = window.Prhay || {};
                     );
                 }
             }
+        };
+
+        // -- Settings: update lists (and invalidate today cache) --
+        const updateSettings = (newSettings) => {
+            const listsChanged = JSON.stringify(newSettings.lists) !== JSON.stringify(settings.lists);
+            setSettings(newSettings);
+            if (listsChanged) resetTodayCache();
         };
 
         // -- CRUD --
@@ -132,17 +143,20 @@ window.Prhay = window.Prhay || {};
                 createdAt: Date.now()
             };
             setPrayers([newPrayer, ...prayers]);
+            resetTodayCache();
         };
 
         const updatePrayer = (id, updates) => {
             setPrayers(prayers.map(p =>
                 p.id === id ? { ...p, ...updates } : p
             ));
+            resetTodayCache();
         };
 
         const deletePrayer = (id) => {
             if (confirm(t.delete_confirm)) {
                 setPrayers(prayers.filter(p => p.id !== id));
+                resetTodayCache();
             }
         };
 
@@ -158,13 +172,13 @@ window.Prhay = window.Prhay || {};
                 return <CompleteView t={t} setView={setView} />;
             }
             if (view === 'manage') {
-                return <ManageView t={t} prayers={prayers} addPrayer={addPrayer} updatePrayer={updatePrayer} deletePrayer={deletePrayer} setView={setView} />;
+                return <ManageView t={t} settings={settings} prayers={prayers} addPrayer={addPrayer} updatePrayer={updatePrayer} deletePrayer={deletePrayer} setView={setView} />;
             }
             if (view === 'stats') {
-                return <StatsView t={t} stats={stats} prayers={prayers} setView={setView} />;
+                return <StatsView t={t} stats={stats} settings={settings} prayers={prayers} setView={setView} />;
             }
             if (view === 'settings') {
-                return <SettingsView t={t} settings={settings} setSettings={setSettings} prayers={prayers} stats={stats} setPrayers={setPrayers} setStats={setStats} setView={setView} />;
+                return <SettingsView t={t} settings={settings} setSettings={updateSettings} prayers={prayers} stats={stats} setPrayers={setPrayers} setStats={setStats} setView={setView} />;
             }
             return null;
         })();
