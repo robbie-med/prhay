@@ -32,10 +32,15 @@ window.Prhay = window.Prhay || {};
                             </span>
                         </div>
 
-                        <div className="flex-1 flex items-center justify-center text-center">
+                        <div className="flex-1 flex flex-col items-center justify-center text-center">
                             <h2 className="text-2xl md:text-3xl font-bold leading-relaxed break-words">
                                 {currentCard.text}
                             </h2>
+                            {currentCard.notes && (
+                                <p className="mt-4 text-sm text-stone-400 dark:text-stone-500 leading-relaxed max-w-[90%] italic" style={{ fontFamily: "'Crimson Text', serif" }}>
+                                    {currentCard.notes}
+                                </p>
+                            )}
                         </div>
 
                         <div className="mt-auto pt-6 border-t border-stone-100 dark:border-stone-800">

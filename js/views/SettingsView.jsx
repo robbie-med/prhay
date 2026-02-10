@@ -122,6 +122,12 @@ window.Prhay = window.Prhay || {};
                     </section>
                 </div>
 
+                <div className="mt-8 mb-4 text-center">
+                    <p className="text-xs text-stone-400 dark:text-stone-600">
+                        FOSS by robbiemed 2026 | <a href="https://robbiemed.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-amber-600">robbiemed.org</a> | SDG
+                    </p>
+                </div>
+
                 <NavBar view="settings" setView={setView} />
             </div>
         );
