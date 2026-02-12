@@ -4,6 +4,8 @@ A private, focused space for your prayer life. No accounts, no cloud, no trackin
 
 **[prhay.robbiemed.org](https://prhay.robbiemed.org)**
 
+<img width="693" height="914" alt="pr1" src="https://github.com/user-attachments/assets/46d29606-0a8b-4fe3-b52d-39135925ec40" />
+
 <!-- Add screenshots here -->
 <!-- ![Home Screen](screenshots/home.png) -->
 <!-- ![Session](screenshots/session.png) -->
